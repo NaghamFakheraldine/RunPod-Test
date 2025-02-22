@@ -1,12 +1,6 @@
 # Stage 1: Base image with common dependencies
 FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04 as base
 
-# Prevents prompts from packages asking for user input during installation
-ENV DEBIAN_FRONTEND=noninteractive
-ENV PIP_PREFER_BINARY=1
-ENV PYTHONUNBUFFERED=1 
-ENV CMAKE_BUILD_PARALLEL_LEVEL=8
-
 # Install Python, git and other necessary tools
 RUN apt-get update && apt-get install -y \
     python3.10 \
