@@ -58,11 +58,24 @@ RUN cd models/checkpoints && \
     fi
 
 RUN cd models/controlnet && \
-    wget --header="Authorization: Bearer ${HF_TOKEN}" -O "control-lora-canny-rank256.safetensors" https://huggingface.co/stabilityai/control-lora/resolve/main/control-LoRAs-rank256/control-lora-canny-rank256.safetensors
+    wget --retry-connrefused --tries=5 --timeout=30 \
+    --header="Authorization: Bearer ${HF_TOKEN}" \
+    -O "control-lora-canny-rank256.safetensors" \
+    "https://huggingface.co/stabilityai/control-lora/resolve/main/control-LoRAs-rank256/control-lora-canny-rank256.safetensors" || exit 0
 
 RUN cd models/inpaint && \
-    wget --header="Authorization: Bearer ${HF_TOKEN}" -O "inpaint_v26.fooocus.patch" https://huggingface.co/lllyasviel/fooocus_inpaint/resolve/main/inpaint_v26.fooocus.patch && \
-    wget --header="Authorization: Bearer ${HF_TOKEN}" -O "fooocus_inpaint_head.pth" https://huggingface.co/lllyasviel/fooocus_inpaint/resolve/main/fooocus_inpaint_head.pth && \
+    wget --retry-connrefused --tries=5 --timeout=30 \
+    --header="Authorization: Bearer ${HF_TOKEN}" \
+    -O "inpaint_v26.fooocus.patch" \
+    "https://huggingface.co/lllyasviel/fooocus_inpaint/resolve/main/inpaint_v26.fooocus.patch" || exit 0
+
+RUN cd models/inpaint && \
+    wget --retry-connrefused --tries=5 --timeout=30 \
+    --header="Authorization: Bearer ${HF_TOKEN}" \
+    -O "fooocus_inpaint_head.pth" \
+    "https://huggingface.co/lllyasviel/fooocus_inpaint/resolve/main/fooocus_inpaint_head.pth" || exit 0
+
+RUN cd models/inpaint && \
     wget -O "Places_512_FullData_G.pth" https://github.com/Sanster/models/releases/download/add_mat/Places_512_FullData_G.pth
 
 # Install runpod
