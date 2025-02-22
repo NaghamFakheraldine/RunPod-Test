@@ -104,7 +104,12 @@ ENV AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
 # For the S3 download, make sure we're in the ComfyUI directory first
 WORKDIR /comfyui
 RUN cd models/loras && \
-    aws s3 cp s3://loras-bucket/Elie_Saab/V2/ElieSaabLoraV2.safetensors .
+    if [ ! -z "$AWS_ACCESS_KEY_ID" ] && [ ! -z "$AWS_SECRET_ACCESS_KEY" ]; then \
+        aws s3 cp s3://loras-bucket/Elie_Saab/V2/ElieSaabLoraV2.safetensors . || \
+        echo "Failed to download from S3, continuing build..."; \
+    else \
+        echo "AWS credentials not provided, skipping S3 download..."; \
+    fi
 
 # Start container
 CMD ["src/start.sh"]
